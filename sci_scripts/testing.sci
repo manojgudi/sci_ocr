@@ -17,18 +17,57 @@ WriteImage(dilate_image, path+"dilated.png");
 
 
 //thresholding(mm, 100)
-//threshold = CalculateOtsuThreshold(main_image);
-//binary_image = SegmentByThreshold(main_image, threshold);
-//binary_image = DilateImage(binary_image, struc_element);
+threshold = CalculateOtsuThreshold(main_image);
+binary_image = SegmentByThreshold(main_image, threshold);
+binary_image = DilateImage(binary_image, struc_element);
 //WriteImage(binary_image, path+"binary.png");
 //ShowImage(binary_image, "yo");
 
 
 // SUMMATIONS
-[i,j] = size(dilate_image)
+[row_no,col_no] = size(dilate_image)
 // Rowsum
-for m = 1:i,
-	row_sum(m) = sum(dilate_image(m,:));
+row_sum = zeros(row_no,1);
+for m = 1:row_no,
+	row_sum(m) = sum(binary_image(m,:));
 end
 
 plot2d(row_sum);
+
+// Remove from RAM
+binary_image=[];
+dilate_image=[];
+
+
+
+// Line Extraction
+N = 1;
+K = 1;
+J = 1;
+for i = 1:(row_no-5),
+	if (row_sum(i) == row_sum(i+1)) then
+		N=N+1;
+		if N == 5  then  // Minimum 5 pixels should be equal
+			printf ("start co-ordinates %d \t" ,i-4);
+			
+			// Storing it in array
+			start_coordinate(K) = (i-4);
+			K = K + 1;
+
+		end
+	else
+		if N > 5 then // Can be anything N > 1
+			printf("end co-ordinate %d \n", (i-1));
+			
+			// Storing it in array
+			end_coordinate(J) = (i-1);
+			J = J+1;
+		end
+		N = 1;
+	end
+end
+
+// Line Image
+//for i = 1 : max(size(start_coordinate), size(end_coordinate))
+//	line
+//end
