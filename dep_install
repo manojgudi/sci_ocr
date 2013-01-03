@@ -47,5 +47,5 @@ rm -rf IPD/
 echo "Installed IPD Successfully IN..."
 echo "$PRESENT_DIR/IPD"
 echo "Adding loader.sce path to Scilab"
-echo "exec $PRESENT_DIR/IPD/etc/IPD.start" >> /usr/share/scilab/contrib/loader.sce
+echo "exec $PRESENT_DIR/IPD/etc/IPD.start; clc" >> /usr/share/scilab/contrib/loader.sce
 echo "IPD installed..."
