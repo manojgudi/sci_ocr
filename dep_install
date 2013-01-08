@@ -43,9 +43,25 @@ scilab-cli -f "builder.sce" -nb
 cd $PRESENT_DIR
 echo "deleting unzipped files and folder"
 cd ..
+echo `pwd`
 rm -rf IPD/
 echo "Installed IPD Successfully IN..."
 echo "$PRESENT_DIR/IPD"
+
+
+cd $PRESENT_DIR
+tar -xvf "ANN_Toolbox_0.4.2_patched.tar"
+cd ANN_Toolbox/
+scilab-cli -f "builder.sce" -nb
+
+# deleting folders...
+cd $PRESENT_DIR
+echo "deleting unzipped files and folder"
+cd ..
+echo `pwd`
+rm -rf ANN_Toolbox/
+
+
 echo "Adding loader.sce path to Scilab"
-echo "exec $PRESENT_DIR/IPD/etc/IPD.start; clc" >> /usr/share/scilab/contrib/loader.sce
+echo "exec $PRESENT_DIR/IPD/etc/IPD.start; exec $PRESENT_DIR/ANN_Toolbox/loader.sce; clc" >> /usr/share/scilab/contrib/loader.sce
 echo "IPD installed..."

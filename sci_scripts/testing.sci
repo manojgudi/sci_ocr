@@ -8,6 +8,10 @@ dilate_image=DilateImage(main_image,struc_element);
 path="./"
 WriteImage(dilate_image, path+"dilated.png");
 
+////
+erode_image = ErodeImage(main_image,struc_element);
+WriteImage(erode_image, path+"eroded.png");
+////
 
 // Binary Image, Writing this to a file is redundant since Image Viewers cannot read binary image
 threshold = CalculateOtsuThreshold(main_image);
@@ -26,7 +30,7 @@ end
 /////////plot2d(row_sum);
 
 // Remove from RAM
-binary_image=[];
+//binary_image=[];
 
 
 // Line Extraction
@@ -60,10 +64,62 @@ end
 
 [row_no, col_no] = size(end_coordinate); // Since end_coordinate has size lower than start_coordinate
 
+// Dictionary
+dic = ['a' 'b' 'c' 'd' 'e' 'f' 'g' 'h' 'i' 'j' 'k' 'l' 'm' 'n' 'o' 'p' 'q' 'r' 's' 't' 'u' 'v' 'w' 'x' 'y' 'z'];
+
+
 for i = 1 : (row_no-1),
 	line = main_image((end_coordinate(i):start_coordinate(i+1)), : );
 	line_number = msprintf("line %d.png", i); 
 	WriteImage(line, path + line_number);
 end
+
+a_char = ReadImage("./training/a.png");
+a_char=RGB2Gray(a_char);
+
+sample_line = ReadImage("./other_line.png");
+[ rows_no, cols_no] = size(sample_line)
+[ a_char_rows, a_char_cols] = size(a_char)
+
+a_char = resize_matrix(a_char, rows_no, a_char_cols);
+
+// Convolution
+
+sum_temp = zeros((cols_no - a_char_cols),1); 
+for i = 1 : (cols_no-a_char_cols),
+	for j = i : (a_char_cols + i-1),
+		for k = 1 : rows_no,
+			temp(k,j) = a_char(k, (j-(i-1))) & sample_line(k ,j);
+		end
+		
+	end
+	
+	if (sum(temp) > 203) & (sum(temp) <= 213) then
+		sum_temp(i) = sum(temp);
+	end
+end
+
+plot2d2(sum_temp);
+
+
+[r,c] = size(sum_temp);N=1;
+for i = 1 : r,
+	if sum_temp(i,c) ~= 0 then
+		N=N+1;
+	end
+end
+
+printf("no of non zero %d", N );
+
+sum_temp=[];
+temp=[];
+sample_line=[];
+a_char=[];
+
+// Deskewing => Hough Transform => SIP toolbox
+// Resizing char_image to mancha
+// how to calculate convol_vector
+
+
 
 
