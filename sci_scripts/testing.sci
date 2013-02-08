@@ -68,6 +68,7 @@ end
 dic = ['a' 'b' 'c' 'd' 'e' 'f' 'g' 'h' 'i' 'j' 'k' 'l' 'm' 'n' 'o' 'p' 'q' 'r' 's' 't' 'u' 'v' 'w' 'x' 'y' 'z'];
 
 
+// Write image function
 for i = 1 : (row_no-1),
 	line = main_image((end_coordinate(i):start_coordinate(i+1)), : );
 	line_number = msprintf("line %d.png", i); 
@@ -77,7 +78,7 @@ end
 a_char = ReadImage("./training/a.png");
 a_char=RGB2Gray(a_char);
 
-sample_line = ReadImage("./other_line.png");
+sample_line = ReadImage("./line 1.png");
 [ rows_no, cols_no] = size(sample_line)
 [ a_char_rows, a_char_cols] = size(a_char)
 
