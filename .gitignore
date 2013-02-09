@@ -2,3 +2,4 @@ dependencies/IPD/
 dependencies/ANN_Toolbox/
 sci_scripts/*.png
 *.swp
+sci_scripts/characters/*

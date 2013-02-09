@@ -60,7 +60,7 @@ end
 
 
 // Pick up a line
-sample_line = ReadImage("./line 1.png");
+sample_line = ReadImage("./line 2.png");
 original_line = sample_line;
 sample_line = uint8( 255 * ones(size(sample_line, 1), size(sample_line, 2))) - sample_line; // Inverted Image
 
@@ -98,9 +98,14 @@ end
 // Since order of char_end and char_start are and SHOULD be same,
 
 char_img = size(char_start);
+
+exec "functions.sci"
 for m = 1 : char_img(2)
 
 	char_number = msprintf("single_char %d.png", m);	
 	char_image = original_line(:,char_start(m):char_end(m));
-	WriteImage(char_image,path+"characters/"+char_number)	
+	char_image = rem_ws(char_image,"cols"); // Remove top and bottom white space 
+		
+	// WriteImage(char_image,path+"characters/"+char_number) doesnt write all characters strangely(unsettling problem)
 end
+
