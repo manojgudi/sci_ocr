@@ -99,7 +99,7 @@ end
 
 char_img = size(char_start);
 
-exec "functions.sci"
+exec "rm_ws.sci"
 for m = 1 : char_img(2)
 
 	char_number = msprintf("single_char %d.png", m);	
