@@ -99,13 +99,21 @@ end
 
 char_img = size(char_start);
 
+exec "feature_extract.sci"
 exec "rm_ws.sci"
+exec "preprocessing.sci"
 for m = 1 : char_img(2)
 
-	char_number = msprintf("single_char %d.png", m);	
-	char_image = original_line(:,char_start(m):char_end(m));
-	char_image = rem_ws(char_image,"cols"); // Remove top and bottom white space 
-		
-	// WriteImage(char_image,path+"characters/"+char_number) doesnt write all characters strangely(unsettling problem)
+	char_number = msprintf("single_char %d.png", m)	
+	char_image = original_line(:,char_start(m):char_end(m))
+	char_image = rm_ws(char_image,"cols") // Remove top and bottom white space 
+
+
+	// Some times char_image is [], find out why
+	if char_image <> [] then
+		inv_binimg = gray2inv_bin(char_image);
+		feature_image = extract_feature(inv_binimg);
+	 	WriteImage(char_image,path+"characters/"+char_number);
+	end
 end
 

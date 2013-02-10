@@ -44,4 +44,3 @@ function [clean_img] = rm_ws(given_img, input_string);
 	end
 endfunction
 
-
