@@ -1,10 +1,9 @@
-// Removing whitespaces from grayscale image, returns co-ordinates image without white-space
+// Removing whitespaces from binary image, returns co-ordinates image without white-space
 
 function [clean_img] = rm_ws(given_img, input_string);
-	
-	// Make it inverted - binary image
-	dirty_img =  uint8( 255 * ones(size(given_img, 1), size(given_img, 2))) - given_img;
-	dirty_img = SegmentByThreshold(dirty_img, CalculateOtsuThreshold(given_img));
+
+
+	dirty_img = given_img; // given_img is binary image
 	dirty_img_dim = size(dirty_img);
 	
 	select input_string

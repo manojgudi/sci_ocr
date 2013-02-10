@@ -32,9 +32,9 @@ function [sum_vector] = vector_sum(image_mat, mode_str)
 endfunction
 
 
+// image_mat is a binary image
 function [feature_struct] = extract_feature(image_mat)
 
-	// image_mat is a binary image
 	image_mat_size = size(image_mat);
 	feature_struct = struct('content', (sum(image_mat)/(image_mat_size(1) * image_mat_size(2))) ,...
 				'row_vector' , vector_sum(image_mat, "rows"), ...
