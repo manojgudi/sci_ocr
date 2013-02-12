@@ -2,5 +2,6 @@ dependencies/IPD/
 dependencies/ANN_Toolbox/
 sci_scripts/*.png
 *.swp
+*.swo
 sci_scripts/characters/*
 .gitignore

@@ -22,15 +22,32 @@ function [] = write_feature(feature_struct, path, name)
 endfunction
 
 
-//function [] = read_feature(feature_struct, path, name)
+// Read features from given path, "./training/training_feature_data"
+function [content_vector,list_rowsum, list_colsum] = read_feature(path, dic)
+
+	dic_size = size(dic); // row dictionary 
 	
-//endfunction
+	// defining variables
+	content_vector = [];
+
+	// list data type is awesome 
+	list_rowsum = list();
+	list_colsum = list();
+
+	for i = 1 : dic_size(2)
+		content_vector($+1) = fscanfMat(path+dic(i)+".content");
+		list_rowsum($+1) = fscanfMat(path+dic(i)+".row_vector");
+		list_colsum($+1) = fscanfMat(path+dic(i)+".col_vector"); 
+	end
+	
+	
+endfunction 
 
 
 
 write_path = path + "training_feature_data/"
 // Extrtact features from all alphabets from ./training and save it in ./training/training_feature_data
-
+// Make this A FUCTION
 for i = 1 : dic_size(2)
 	
 	// ReadImage
@@ -40,11 +57,12 @@ for i = 1 : dic_size(2)
 	char_bin_image = gray2inv_bin(char_image); // inverted binary image
 
 
-	if char_image <> []
-		char_image = rm_ws(char_bin_image,"cols");
-		char_feature = extract_feature(char_image)
+	char_image = rm_ws(char_bin_image,"cols");
+	char_feature = extract_feature(char_image);
 
-		// Write feature
-		write_feature(char_feature, write_path, dic(i))
-	end
+	// Write feature
+	write_feature(char_feature, write_path, dic(i));
+	
 end
+
+

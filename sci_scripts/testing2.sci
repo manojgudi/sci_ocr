@@ -60,7 +60,7 @@ end
 
 
 // Pick up a line
-sample_line = ReadImage("./line 2.png");
+sample_line = ReadImage("./line 1.png");
 original_line = sample_line;
 sample_line = uint8( 255 * ones(size(sample_line, 1), size(sample_line, 2))) - sample_line; // Inverted Image
 
