@@ -4,7 +4,7 @@ sci_ocr
 This a backend application for optical character recognition which uses scilab for agile development.
 Prequsites:
 > Scilab 5.3.3
-> IPD-8.3.1 installed (check master branch for patched source code and installation script).
+> IPD-8.3.1 installed.
 
 
 Algorithm
@@ -67,3 +67,11 @@ text_analysis.sci => does the analysis and co-relation of rowsum of given charac
 training.sci => it generates rowsum and colsum for all [a-z].png in ./sci_scripts/training/ folder and writes it in ./sci_scripts/training/training_feature_data/
 
 *please note this branch is heavily under development, any error or suggestions or flaws in logic, feel free to trouble me*
+
+
+IPD-8.3.1 installation
+================
+
+Clone this repository(or to get source code only, clone master repository)
+
+Run *./dep_install* with root privileges to install the IPD package. The script also installs most of the dependencies required by IPD
