@@ -1,6 +1,5 @@
 dependencies/IPD/
 dependencies/ANN_Toolbox/
-sci_scripts/*.png
 sci_scripts/characters/*.png
 *.swp
 *.swo
