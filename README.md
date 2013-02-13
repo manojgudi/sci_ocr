@@ -10,7 +10,7 @@ Prequsites:
 Algorithm
 ========= 
 
-## This is a short unconventional algorithm developed by me based on feature extraction for fast pattern recognition of characters
+This is a short unconventional algorithm developed by me based on feature extraction for fast pattern recognition of characters
 
 Definitions:
 
@@ -23,12 +23,13 @@ here rowsum = [18, 27] and colsum = [13 15 17]
 * For a given scanned document, we bisect the document in to lines of text and then later cut out all characters in each lines and save it in .sci_scripts/characters folder
 
 For each character of scanned_document.png we apply this algorithm
-1. Read all colsum and rowsum values of training images in a scilab list
-2. Find rowsum and colsum of the given character and store it in a scilab struct
-3. Make the length of rowsum/colsum of given character and rowsum/colsum of characters of training database by decimating the larger of the two with a *non-integral scale(check decimate_vector function in feature_extract.sci)*
-4. Co-relate and compare the rowsum and colsum of given character with each colsum and rowsum of training database to compute min_dist; store each min_distance of co-related rowsum values in sorted_array_rowsum and for colsum in sorted_array_colsum
-5. Sort the two vectors sorted_array_rowsum and sorted_array_colsum
-6. The first row of sorted arrays should be given character
+
+*1. Read all colsum and rowsum values of training images in a scilab list
+*2. Find rowsum and colsum of the given character and store it in a scilab struct
+*3. Make the length of rowsum/colsum of given character and rowsum/colsum of characters of training database by decimating the larger of the two with a *non-integral scale(check decimate_vector function in feature_extract.sci)*
+*4. Co-relate and compare the rowsum and colsum of given character with each colsum and rowsum of training database to compute min_dist; store each min_distance of co-related rowsum values in sorted_array_rowsum and for colsum in sorted_array_colsum
+*5. Sort the two vectors sorted_array_rowsum and sorted_array_colsum
+*6. The first row of sorted arrays should be given character
 
 
 * Why calculate rowsum and colsum?
@@ -39,8 +40,8 @@ For each character of scanned_document.png we apply this algorithm
 
 for ex: run this
 
-$ cd ./sci_scripts
-$ scilab-cli -f text_analysis.sci
+> $ cd ./sci_scripts
+> $ scilab-cli -f text_analysis.sci
 
 and run this function
 > [rowsum, colsum] = compare_features(a_char, content_vector, list_rowsum, list_colsum)
