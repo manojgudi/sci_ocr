@@ -9,7 +9,7 @@ path = path + "training_feature_data/";
 
 
 // given_image should be grayscale
-function [sorted_array] = compare_features(given_img, feature_content, feature_list_rowsum, feature_list_colsum)
+function [sorted_array_row, sorted_array_col] = compare_features(given_img, feature_content, feature_list_rowsum, feature_list_colsum)
 	
 	// Extract feature of given_image first
 	given_img_bin = gray2inv_bin(given_img);
@@ -19,7 +19,7 @@ function [sorted_array] = compare_features(given_img, feature_content, feature_l
 	given_img_fr_size = max(size(given_img_feature_struct.row_vector)); // neglecting 1 in (1, size)
 	given_img_fc_size = max(size(given_img_feature_struct.col_vector)); // neglecting 1 in (1, size)
 	
-	scaling_diff = [] * 23
+	scaling_diff_row = [] * 23
 	
 	for i = 1 : 23   // change it to 26 when problem for i j l are solved
 		
@@ -46,11 +46,42 @@ function [sorted_array] = compare_features(given_img, feature_content, feature_l
 			end
 		end
 		
-		scaling_diff(i,1) = i;
-		scaling_diff(i,2) = (max(scaling)) - min(scaling);
+		scaling_diff_row(i,1) = i;
+		scaling_diff_row(i,2) = (max(scaling)) - min(scaling);
+
+	end
+	
+	for i = 1 : 23   // change it to 26 when problem for i j l are solved
+		
+		list_colsum_size = max(size(list_colsum(i)))  // neglecting 1 in (1, size)
+		
+		// make row_vector of each equal
+		if (given_img_fc_size >= list_colsum_size) then
+			dec_given_img_cv = decimate_vector(given_img_feature_struct.col_vector, list_colsum_size); // using given_img_feature_struct.row_vector as output doesnt work!!
+
+			dec_list_cs = list_colsum(i);
+		else	
+			dec_given_img_cv = given_img_feature_struct.col_vector;
+			dec_list_cs = decimate_vector(list_colsum(i), given_img_fc_size);// using list_rowsum(i) output doesnt work!!
+		end
+	
+		// Pattern matching FOR ROW
+		size_dec_vectors = max(size(dec_given_img_cv)); // can be replaced with dec_list_rs too since sizes are equal now
+		scaling = [] * size_dec_vectors
+		for j = 1:size_dec_vectors
+			if dec_given_img_cv(j) <> 0 then
+				scaling(j,1) = dec_list_cs(j)/dec_given_img_cv(j);
+			else
+				scaling(j,1) = 1;
+			end
+		end
+		
+		scaling_diff_col(i,1) = i;
+		scaling_diff_col(i,2) = (max(scaling)) - min(scaling);
 
 	end
 
-	sorted_array = scaling_diff;
+	sorted_array_row = scaling_diff_row;
+	sorted_array_col = scaling_diff_col;
 endfunction
 
