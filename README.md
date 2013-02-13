@@ -38,7 +38,9 @@ For each character of scanned_document.png we apply this algorithm
 
 
 * Why calculate rowsum and colsum?
+
 >> The feature-based pattern matching greatly reduces the number of iterations required.
+
 >> Each character[a-z] can uniquely be represented by its rowsum and colsum. For ex: one may cleverly point out these following sets should have same rowsum (b,d), (p,q) henceforth called as rowsum_blind characters; but comparing their colsum clearly differenciates them. (colsum_blind set (b,p), (m,w) )
 
 
@@ -52,25 +54,25 @@ and run this function
 > [rowsum, colsum] = compare_features(a_char, content_vector, list_rowsum, list_colsum)
 
 It throws up two 23x2 matrices ; find the top miniumum value in 2nd column and note the corresponding index in 1st column is the character which the code has detected; that is if index in 1st column is 1, it means character corresponding to it is letter "a"
-*Note that the indices correspond to set [a-z]-{ i,j, l} its one of **pain** point which will be sorted out soon*
+*Note that the indices correspond to set [a-z]-{ i,j, l} its one of *pain point which will be sorted out soon*
  
  
 How to fiddle with code
 =======================
 All the code reside in ./sci_scripts
 
-extract_line_char.sci => run this code and it automatically chops up ./scanned_document.png into lines (which is saved in the given folder) and characters which is saved in ./characters folder serially
+**extract_line_char.sci** => run this code and it automatically chops up ./scanned_document.png into lines (which is saved in the given folder) and characters which is saved in ./characters folder serially
 
-feature_extract.sci => contains all functions to generate rowsum and colsum and decimate_vector function
+**feature_extract.sci** => contains all functions to generate rowsum and colsum and decimate_vector function
 
-preprocessing.sci => preprocesses image before further processing (for ex: converting a hypermatrix into a matrix by RGB2Gray function)
+**preprocessing.sci** => preprocesses image before further processing (for ex: converting a hypermatrix into a matrix by RGB2Gray function)
 
-rm_ws.sci => removes white spaces above and below of single character image before rowsum/colsum is calculated.
+**rm_ws.sci** => removes white spaces above and below of single character image before rowsum/colsum is calculated.
 
-text_analysis.sci => does the analysis and co-relation of rowsum of given character image and training database and contains compare_features function which does the pattern recognition
+**text_analysis.sci** => does the analysis and co-relation of rowsum of given character image and training database and contains compare_features function which does the pattern recognition
                      ./sci_scripts/training/training_image.svg => This svg can be used to generate training characters, it can be edited with inkscape(a free graphical svg editorr); change all font properties by selection and batch export. It will automatically create [a-z].png in ./sci_scripts/training/
 
-training.sci => it generates rowsum and colsum for all [a-z].png in ./sci_scripts/training/ folder and writes it in ./sci_scripts/training/training_feature_data/
+**training.sci** => it generates rowsum and colsum for all [a-z].png in ./sci_scripts/training/ folder and writes it in ./sci_scripts/training/training_feature_data/
 
 *please note this branch is heavily under development, any error or suggestions or flaws in logic, feel free to trouble me*
 
