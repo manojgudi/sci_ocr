@@ -1,4 +1,5 @@
-sci_ocr =======
+sci_ocr 
+=======
 
 This a backend application for optical character recognition which uses scilab for agile development.
 Prequsites:
