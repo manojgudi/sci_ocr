@@ -1,5 +1,4 @@
-sci_ocr
-=======
+sci_ocr =======
 
 This a backend application for optical character recognition which uses scilab for agile development.
 Prequsites:
@@ -80,6 +79,6 @@ All the code reside in ./sci_scripts
 IPD-8.3.1 installation
 ================
 
-Clone this repository(or to get source code only, clone master repository)
+Clone this repository(or to get source code only, clone deps repository)
 
 Run *./dep_install* with root privileges to install the IPD package. The script also installs most of the dependencies required by IPD
