@@ -1,0 +1,283 @@
+#!/usr/bin/python2.7	
+
+import argparse
+import re
+
+# Colors
+HEADER = '\033[95m'
+OKBLUE = '\033[94m'
+OKGREEN = '\033[92m'
+WARNING = '\033[93m'
+FAIL = '\033[91m'
+ENDC = '\033[0m'
+
+
+
+parser = argparse.ArgumentParser(description="A simple script to save you from mildly terrible scilab scripting \n www.github.com/manojgudi/yelp")
+parser.add_argument("file", help="requires a valid file name")
+
+group = parser.add_mutually_exclusive_group()
+group.add_argument("-c","--comment_all", help="multi-line comment given document specified by ##  markers", action="store_true")
+group.add_argument("-u", "--uncomment_all", help="multi-line UNcomment if previously commented using yelp", action = "store_true")
+parser.add_argument("-f", help="Force the script to write changes directly to the file", action="store_true")
+parser.add_argument("-d", help="Show diff", action="store_true")
+
+
+args = parser.parse_args()
+
+# String which will be used by exec_function
+huge_string=""
+args_list=[]
+
+
+# File opening and read it into file_data variable
+file_obj = open(args.file, 'r')
+file_data = file_obj.read()
+file_obj.close()
+
+
+def list2fstr(list_data):
+	# Opposite of string.splitlines() function, list to formatted string
+	formatted_string = ""
+	for i in list_data:
+		formatted_string = formatted_string + i + "\n"
+		
+	return formatted_string
+
+def comment_all(str_data):
+	# Check for number of ##, if the number is odd, then user is on way to destroy code
+	if str_data.count("##")%2 != 0:
+		print("There are odd number of ## markers in document, please correct it")
+		return (-1)
+	else:
+		list_data = str_data.splitlines()
+		
+		count = 0
+		start_marker = []
+		end_marker = []
+
+		# iterating for each sentence
+		for i in list_data:
+			count+=1
+			if i.startswith("##"):
+				start_marker.append(count)
+			elif i.endswith("##"):
+				end_marker.append(count)
+		
+		if len(start_marker) == 0:
+			print(WARNING+"Either there are NO comment_markers or they are misplaced \nPlease consider rediting your file"+ENDC)
+			exit()
+								
+		for i in start_marker:
+			line_iterator = range((i-1),(end_marker[start_marker.index(i)])) # Use of (i-1) so that it includes the line which contains #
+
+			# Add // to those section
+			for j in line_iterator:
+				
+				# Shows what all is deleted
+				"""if args.d:
+					print("--"+FAIL+list_data[j]+ENDC)"""
+					
+				list_data[j] = "//" + list_data[j]			
+				
+				# Shows what all is modified
+				if args.d:
+					print("++ "+OKBLUE+list_data[j]+ENDC)
+					
+		# Convert list_data to a string modified_content
+		modified_content = list2fstr(list_data)
+					
+		# If --force option is set, then write in same file
+		if args.f:
+			# reopen original file
+			file_obj = open(args.file, 'w')
+			file_obj.write(modified_content)
+			file_obj.close()
+		else:
+			write_other_file = open("mod_"+args.file, 'w')
+			write_other_file.write(modified_content)
+			write_other_file.close()
+
+def uncomment_all(str_data):
+        list_data = str_data.splitlines()
+        count = 0
+        start_marker = []
+        end_marker = []
+
+        # iterating for each sentence
+        for i in list_data:
+                count+=1
+                if i.startswith("//##"):
+                        start_marker.append(count)
+                elif i.endswith("##"):
+                        end_marker.append(count)
+        
+        if len(start_marker) == 0:
+                print(WARNING+"Either there are NO comment_markers or they are misplaced \nPlease consider rediting your file"+ENDC)
+                exit()
+                                                        
+        for i in start_marker:
+                line_iterator = range((i-1),(end_marker[start_marker.index(i)])) # Use of (i-1) so that it includes the line which contains #
+
+                # Add // to those section
+                for j in line_iterator:
+                        list_data[j] =  list_data[j].strip("//")
+			# Shows what all is modified
+			if args.d:
+				print("++ "+OKGREEN+list_data[j]+ENDC)
+        
+        # Convert list_data to a string modified_content
+        modified_content = list2fstr(list_data)
+                
+        # If --force option is set, then write in same file
+        if args.f:
+                # reopen original file
+                file_obj = open(args.file, 'w')
+                file_obj.write(modified_content)
+                file_obj.close()
+        else:
+                write_other_file = open("mod_"+args.file, 'w')
+                write_other_file.write(modified_content)
+                write_other_file.close()
+
+# exec_function is responsible for the checking of expansion of header file, if the header file_name is found in file_list, then skip adding it, else add, at the end return file_list which has all file_name.sc* which has to be expanded
+def exec_function(file_name):
+	
+	file_obj = open(file_name,'r')
+	file_data = file_obj.read()
+	file_obj.close()
+	def find_exec(string):
+		list_exec=re.findall("exec [a-zA-Z0-9_]*.sc[a-z]",string)
+		file_list = []
+		# Remove "exec " to get headers only
+		for i in list_exec:
+			i = i.replace("exec","").strip(" ")
+			if i != args.file:
+				file_list.append(i)
+
+		return file_list
+
+	file_list = find_exec(file_data)
+	return file_list
+
+
+
+## refer documentation to see its algorithm
+
+# Algorithm traverse and expand to each and every file which is returned by file_list; add it to content
+
+def expand_exec(file_name,huge_string):
+	if args_list.count(file_name) == 0:
+		args_list.append(file_name)
+		new_list = exec_function(file_name)
+
+		# print new_list
+		if new_list == []:
+			pass
+		else:
+			for nested_file in new_list:
+
+				print("nesting to " + nested_file)
+
+				try:
+					file_obj = open(nested_file,'r')
+					file_data = file_obj.read()
+					file_obj.close()
+					huge_string = expand_exec(nested_file,huge_string)
+					huge_string = huge_string + file_data
+				except: 
+					print "Couldn't find any file named: " + nested_file
+	
+	return huge_string
+
+# Remove comments and exec statement; also if ## comment markers found, then abort.
+def rm_comments(file_string):
+	list_data = file_string.splitlines()
+	list_pass_void_comments = []
+	for i in list_data:
+		if i.count("exec") != 0:
+			pass
+		elif i.count("//") != 0:
+			i = i.split("//")[0]
+			list_pass_void_comments.append(i)
+		elif i.count("##") != 0:
+			print("Comment Markers Found, please pass the file through multi-line commenter")
+			exit() 
+		else:
+			list_pass_void_comments.append(i)
+	
+	return list2fstr(list_pass_void_comments)
+
+
+# Takes string and returns list of all functions which have single occurence
+def useless(file_data):
+    ret = []
+    functionline = 'function [^(]*' # detects function declaration line
+    results = re.findall(functionline, file_data)
+    for result in results:
+        name = re.findall("=[^(]*", result)[0][1:].strip()
+        count = file_data.count(name)
+        if count==1:
+            ret.append(name)
+    return ret
+
+# Find variable which has single occurence found by the regex in var_declaration
+def var(file_data):
+    ret=[]
+    temp_names=[]
+    var_declaration = '[a-zA-Z_][a-zA-Z0-9_]* *='
+    results = re.findall(var_declaration, file_data)
+    for result in results:
+        name = result.replace("=","").strip()
+        count = file_data.count(name)
+        if count==1:
+           temp_names.append(name)
+    line_no=1
+    for line in file_data.split("\n"):
+        for name in temp_names:
+            if name in line:
+                ret.append([name,line_no])
+        line_no+=1
+    return ret
+
+
+# Finds single_occurence_variable and function
+def find_single_variable(huge_string):
+	
+	huge_string = expand_exec(args.file, huge_string)
+
+	# Remove comments from them
+	huge_string = rm_comments(huge_string)
+	
+	# Find single_function and single_variable occurences
+	single_occ_func = useless(huge_string)	
+	single_occ_var = var(huge_string)
+	
+	
+	# Print Function Occurences
+	print WARNING+"\nSingle Function Occurences"+ENDC
+	for i in single_occ_func:
+		print ">> "+FAIL+i+ENDC
+	
+	print WARNING+"\nSingle Variable Occurences"+ENDC
+	
+	# Print Variable Occurences
+	for i in single_occ_var:
+		print "Variable: "+FAIL+i[0]+ENDC
+		print "Line no. "+HEADER+str(i[1])+ENDC
+		
+		
+	
+
+# check for -c and -u flags
+if args.comment_all:
+	print "commenting file"
+	comment_all(file_data)
+if args.uncomment_all:
+	print "uncommenting file"
+	uncomment_all(file_data)
+
+if args.f :
+	exit()
+else:
+	find_single_variable(file_data)
