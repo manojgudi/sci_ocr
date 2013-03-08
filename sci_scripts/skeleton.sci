@@ -1,35 +1,5 @@
+stacksize max
 exec preprocessing.sci
-
-// Dictionary
-dic = ['a' 'b' 'c' 'd' 'e' 'f' 'g' 'h' 'k' 'm' 'n' 'o' 'p' 'q' 'r' 's' 't' 'u' 'v' 'w' 'x' 'y' 'z'];
-
-//## Commented using yelp, morphological(maximum disk)based skeletonization
-//diff_matrix=list()
-//
-//for i = 1 : size(dic,2)
-//	image = ReadImage("./training/"+dic(i)+".png");	
-//	image = RGB2Gray(image)
-//	
-//	j = 1;
-//	erode_image = 1	
-// 	diff_matrix=list()
-//	
-//	while (sum(erode_image) <> 0 )
-//		struct_element = CreateStructureElement('square',j);
-//		erode_image = ErodeImage(image, struct_element)
-//		open_image = OpenImage(image, struct_element)
-//		diff_matrix($+1) = list(erode_image - open_image)
-//		//for k = 1:size(diff_matrix)
-//			
-//		//end
-//		j = j+1;
-//		printf("%c\n",dic(i))
-//		printf("%i ", j)
-//		printf("sum %i",sum(image))
-//	end
-//	
-//end ##
-
 
 // Functions used inside MAT   
 //// sub_matrix = [p9, p2, p3; p8, p1, p4; p7, p6, p5]
@@ -109,7 +79,7 @@ function [char_image] = delete_dirty_pix(char_image,dirty_pix) // char_image sho
 	end
 endfunction
 
-char_image = ReadImage("training/b.png");
+char_image = ReadImage("a.png");
 gray_char_image = RGB2Gray(char_image);
 gray_char_image = gray2inv_bin(gray_char_image);
 
@@ -128,11 +98,12 @@ while (size(dirty_pix_1) <> 0)
 	printf("sum2 %i\n",sum(gray_char_image));
 end
 
+// Converting the image in to grayscale so that it could be written
 [rows,cols] = size(gray_char_image);
 white_img = zeros(rows,cols) + 255
 for i = 1:rows
-for j = 1:cols
-	temp(i,j) = uint8(white_img(i,j) * ~(gray_char_image(i,j)));
+	for j = 1:cols
+		temp(i,j) = uint8(white_img(i,j) * ~(gray_char_image(i,j)));
+	end
 end
-end
-WriteImage(temp, 'manoj.jpg')
+WriteImage(temp, 'skeleton.jpg')
