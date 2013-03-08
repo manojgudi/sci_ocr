@@ -33,7 +33,7 @@ For each character of scanned_document.png we apply this algorithm
 4. Co-relate and compare the rowsum and colsum of given character with each colsum and rowsum of training database to compute min_dist; store each min_distance of co-related rowsum values in sorted_array_rowsum and for colsum in sorted_array_colsum
 
 5. Sort the two vectors sorted_array_rowsum and sorted_array_colsum
-
+	
 6. The first row of sorted arrays should be given character
 
 
@@ -47,8 +47,8 @@ For each character of scanned_document.png we apply this algorithm
 
 for ex: run this
 
-> $ cd ./sci_scripts
-> $ scilab-cli -f text_analysis.sci
+`$ cd ./sci_scripts` <br>
+`$ scilab-cli -f text_analysis.sci`
 
 and run this function
 > [rowsum, colsum] = compare_features(a_char, content_vector, list_rowsum, list_colsum)
@@ -72,7 +72,7 @@ All the code reside in ./sci_scripts
 **text_analysis.sci** => does the analysis and co-relation of rowsum of given character image and training database and contains compare_features function which does the pattern recognition
                      ./sci_scripts/training/training_image.svg => This svg can be used to generate training characters, it can be edited with inkscape(a free graphical svg editorr); change all font properties by selection and batch export. It will automatically create [a-z].png in ./sci_scripts/training/
 
-**training.sci** => it generates rowsum and colsum for all [a-z].png in ./sci_scripts/training/ folder and writes it in ./sci_scripts/training/training_feature_data/
+**training.sci** => it generates rowsum and colsum for all [a-z].png in ./sci_scripts/training/ folder and writes it in ./sci_scrip	ts/training/training_feature_data/
 
 *please note this branch is heavily under development, any error or suggestions or flaws in logic, feel free to trouble me*
 
@@ -83,3 +83,7 @@ IPD-8.3.1 installation
 Clone this repository(or to get source code only, clone master repository)
 
 Run *./dep_install* with root privileges to install the IPD package. The script also installs most of the dependencies required by IPD
+
+### yelp
+Using yelp is really useful if you need to check single instances of (unused) functions/variables or multi-line un/commenting.<br>
+<a href = "https://github.com/manojgudi/yelp"> Read more</a>
