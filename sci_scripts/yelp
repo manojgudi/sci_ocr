@@ -74,10 +74,6 @@ def comment_all(str_data):
 			# Add // to those section
 			for j in line_iterator:
 				
-				# Shows what all is deleted
-				"""if args.d:
-					print("--"+FAIL+list_data[j]+ENDC)"""
-					
 				list_data[j] = "//" + list_data[j]			
 				
 				# Shows what all is modified
@@ -140,6 +136,17 @@ def uncomment_all(str_data):
                 write_other_file.write(modified_content)
                 write_other_file.close()
 
+
+# Removes commented exec statments like these "// exec something.sci"
+def rm_commented_exec(string):
+	list_string = string.splitlines()
+	string = ""
+	for lines in list_string:
+		if (not(lines.startswith("//"))):
+			string = string +'\n' + lines
+			
+	return string
+
 # exec_function is responsible for the checking of expansion of header file, if the header file_name is found in file_list, then skip adding it, else add, at the end return file_list which has all file_name.sc* which has to be expanded
 def exec_function(file_name):
 	
@@ -147,6 +154,10 @@ def exec_function(file_name):
 	file_data = file_obj.read()
 	file_obj.close()
 	def find_exec(string):
+		
+		# remove commented exec statments; actually it removes comments altogether
+		string = rm_commented_exec(string)
+	
 		list_exec=re.findall("exec [a-zA-Z0-9_]*.sc[a-z]",string)
 		file_list = []
 		# Remove "exec " to get headers only
@@ -154,7 +165,7 @@ def exec_function(file_name):
 			i = i.replace("exec","").strip(" ")
 			if i != args.file:
 				file_list.append(i)
-
+	
 		return file_list
 
 	file_list = find_exec(file_data)
@@ -166,8 +177,9 @@ def exec_function(file_name):
 
 # Algorithm traverse and expand to each and every file which is returned by file_list; add it to content
 
-def expand_exec(file_name,huge_string):
-	if args_list.count(file_name) == 0:
+def nested_list(file_name,args_list):
+	if (args_list.count(file_name) == 0):
+	
 		args_list.append(file_name)
 		new_list = exec_function(file_name)
 
@@ -176,19 +188,17 @@ def expand_exec(file_name,huge_string):
 			pass
 		else:
 			for nested_file in new_list:
-
-				print("nesting to " + nested_file)
+			
+				# Check if its nesting all the way till last file
+				#print("nesting to " + nested_file)
 
 				try:
 					file_obj = open(nested_file,'r')
-					file_data = file_obj.read()
 					file_obj.close()
-					huge_string = expand_exec(nested_file,huge_string)
-					huge_string = huge_string + file_data
+					args_list = nested_list(nested_file,args_list)
 				except: 
 					print "Couldn't find any file named: " + nested_file
-	
-	return huge_string
+	return args_list
 
 # Remove comments and exec statement; also if ## comment markers found, then abort.
 def rm_comments(file_string):
@@ -220,6 +230,19 @@ def useless(file_data):
         if count==1:
             ret.append(name)
     return ret
+    
+# Expand all headers found in args_list of nested_list and expand it
+def expand_exec(args_list):
+	huge_string = ""
+	for header_file in args_list:
+		try:
+			file_obj = open(header_file,'r')
+			huge_string=huge_string + file_obj.read()
+			file_obj.close()
+		except:
+			 # Ideally, it should never reach here since this is already checked in nested_list function
+			print (FAIL+"Failed to expand: "+header_file+ENDC)
+	return huge_string
 
 # Find variable which has single occurence found by the regex in var_declaration
 def var(file_data):
@@ -242,9 +265,20 @@ def var(file_data):
 
 
 # Finds single_occurence_variable and function
-def find_single_variable(huge_string):
+def find_single_variable(huge_string,args_list,file_name):
+	args_list = nested_list(args.file, args_list)
+	huge_string=expand_exec(args_list)
+
+
+	# If some exec files are incorrectly dependent on args.file then remove it
+	try:		
+		args_list.remove(file_name)		
+	except:
+		pass
 	
-	huge_string = expand_exec(args.file, huge_string)
+	# Each file in args_list should be once
+	print (HEADER+"traversing through files:"+ENDC)
+	print args_list
 
 	# Remove comments from them
 	huge_string = rm_comments(huge_string)
@@ -256,16 +290,20 @@ def find_single_variable(huge_string):
 	
 	# Print Function Occurences
 	print WARNING+"\nSingle Function Occurences"+ENDC
-	for i in single_occ_func:
-		print ">> "+FAIL+i+ENDC
-	
-	print WARNING+"\nSingle Variable Occurences"+ENDC
-	
+	if single_occ_func !=[]:
+		for i in single_occ_func:
+			print ">> "+FAIL+i+ENDC
+	else:
+		print (OKGREEN+"No single-occurence of functions found"+ENDC)
+
 	# Print Variable Occurences
-	for i in single_occ_var:
-		print "Variable: "+FAIL+i[0]+ENDC
-		print "Line no. "+HEADER+str(i[1])+ENDC
-		
+	print WARNING+"\nSingle Variable Occurences"+ENDC
+	if single_occ_var != []:
+		for i in single_occ_var:
+			print "Variable: "+FAIL+i[0]+ENDC
+			print "Line no. "+HEADER+str(i[1])+ENDC
+	else:
+		print (OKGREEN+"No single-occurence of variables found"+ENDC)
 		
 	
 
@@ -280,4 +318,4 @@ if args.uncomment_all:
 if args.f :
 	exit()
 else:
-	find_single_variable(file_data)
+	find_single_variable(file_data,args_list,args.file)
