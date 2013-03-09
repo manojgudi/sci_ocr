@@ -1,3 +1,8 @@
+/// Author: Manoj Gudi, March 2013
+/// manoj.p.gudi@gmail.com                               
+/// Released under General Public License V3
+
+
 // built on IPD 8.3-1
 // Creates inverted binary image from a grayscale image
 function [bin_img] = gray2inv_bin(gray_img)
@@ -7,8 +12,3 @@ function [bin_img] = gray2inv_bin(gray_img)
 	
 endfunction
 
-// Create inverted binary image from a RGB image (hypermatrix)
-function [bin_img] = rgb2inv_bin(rgb_img)
-	gray_img = RGB2Gray(rgb_img)
-	bin_img = gray2inv_bin(gray_img)
-endfunction

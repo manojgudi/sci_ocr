@@ -1,3 +1,7 @@
+/// Author: Manoj Gudi, March 2013
+/// manoj.p.gudi@gmail.com
+/// Released under General Public License V3
+
 stacksize max
 exec preprocessing.sci
 
@@ -79,31 +83,3 @@ function [char_image] = delete_dirty_pix(char_image,dirty_pix) // char_image sho
 	end
 endfunction
 
-char_image = ReadImage("a.png");
-gray_char_image = RGB2Gray(char_image);
-gray_char_image = gray2inv_bin(gray_char_image);
-
-i=0;
-dirty_pix_1 = list(1) // Intialize with garbage
-while (size(dirty_pix_1) <> 0)
-	dirty_pix_1=step(gray_char_image,1)// Perform step1
-	gray_char_image=delete_dirty_pix(gray_char_image, dirty_pix_1)
-	printf("sum1 %i\n",sum(gray_char_image));
-
-	dirty_pix_2=step(gray_char_image,2)// Perform step1
-	gray_char_image=delete_dirty_pix(gray_char_image, dirty_pix_2)
-	
-	i=i+1;	
-	printf("loop no %i",i);
-	printf("sum2 %i\n",sum(gray_char_image));
-end
-
-// Converting the image in to grayscale so that it could be written
-[rows,cols] = size(gray_char_image);
-white_img = zeros(rows,cols) + 255
-for i = 1:rows
-	for j = 1:cols
-		temp(i,j) = uint8(white_img(i,j) * ~(gray_char_image(i,j)));
-	end
-end
-WriteImage(temp, 'skeleton.jpg')
