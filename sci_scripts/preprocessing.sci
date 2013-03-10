@@ -9,6 +9,6 @@ endfunction
 
 // Create inverted binary image from a RGB image (hypermatrix)
 function [bin_img] = rgb2inv_bin(rgb_img)
-	gray_img = RGB2Gray(rgb2inv)
+	gray_img = RGB2Gray(rgb_img)
 	bin_img = gray2inv_bin(gray_img)
 endfunction
