@@ -4,3 +4,5 @@ sci_scripts/characters/*.png
 *.swp
 *.swo
 .gitignore
+*.jpg
+*.png
