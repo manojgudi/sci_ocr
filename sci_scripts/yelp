@@ -230,8 +230,6 @@ def useless(file_data):
         if count==1:
             ret.append(name)
     return ret
-<<<<<<< HEAD
-=======
 
 # Takes string and returns list of all output arguments which are not assigned a return value
 
@@ -285,7 +283,6 @@ def return_line_no(keyword_list,file_list):
 		
 		
 	return file_keyword_list
->>>>>>> staging
     
 # Expand all headers found in args_list of nested_list and expand it
 def expand_exec(args_list):
@@ -310,18 +307,8 @@ def var(file_data):
         name = result.replace("=","").strip()
         count = file_data.count(name)
         if count==1:
-<<<<<<< HEAD
-           temp_names.append(name)
-    line_no=1
-    for line in file_data.split("\n"):
-        for name in temp_names:
-            if name in line:
-                ret.append([name,line_no])
-        line_no+=1
-=======
            ret.append(name)
 
->>>>>>> staging
     return ret
 
 
@@ -338,17 +325,12 @@ def find_single_variable(huge_string,args_list,file_name):
 		pass
 	
 	# Each file in args_list should be once
-<<<<<<< HEAD
-	print (HEADER+"traversing through files:"+ENDC)
-	print args_list
-=======
 	print OKGREEN + "------------------------------------------------------------------------" + ENDC
 	print (HEADER+"Traversing through headers:"+ENDC)
 	if args_list == []:
 		print "No Headers found"
 	else:
 		print args_list
->>>>>>> staging
 
 	# Remove comments from them
 	huge_string = rm_comments(huge_string)
@@ -356,15 +338,6 @@ def find_single_variable(huge_string,args_list,file_name):
 	# Find single_function and single_variable occurences
 	single_occ_func = useless(huge_string)	
 	single_occ_var = var(huge_string)
-<<<<<<< HEAD
-	
-	
-	# Print Function Occurences
-	print WARNING+"\nSingle Function Occurences"+ENDC
-	if single_occ_func !=[]:
-		for i in single_occ_func:
-			print ">> "+FAIL+i+ENDC
-=======
 	output_args_with_no_return = returnvalues(huge_string)	
 	
 	## Add back file_name to search
@@ -392,23 +365,10 @@ def find_single_variable(huge_string,args_list,file_name):
 		for list_single_occ_func in single_occ_func_position:
 			print ">> "+FAIL+list_single_occ_func[0]+ENDC + " found in "+OKBLUE + list_single_occ_func[1] + ENDC +"@ line "+OKBLUE + str(list_single_occ_func[2]) + ENDC
 
->>>>>>> staging
 	else:
 		print (OKGREEN+"No single-occurence of functions found"+ENDC)
 
 	# Print Variable Occurences
-<<<<<<< HEAD
-	print WARNING+"\nSingle Variable Occurences"+ENDC
-	if single_occ_var != []:
-		for i in single_occ_var:
-			print "Variable: "+FAIL+i[0]+ENDC
-			print "Line no. "+HEADER+str(i[1])+ENDC
-	else:
-		print (OKGREEN+"No single-occurence of variables found"+ENDC)
-		
-	
-
-=======
 	print WARNING+"\nSingle Variable Occurences:"+ENDC
 	if single_occ_var_position != []:
 		for list_single_occ_var in single_occ_var_position:
@@ -418,7 +378,6 @@ def find_single_variable(huge_string,args_list,file_name):
 		
 	print OKGREEN + "------------------------------------------------------------------------" + ENDC
 	
->>>>>>> staging
 # check for -c and -u flags
 if args.comment_all:
 	print "commenting file"
@@ -431,11 +390,8 @@ if args.f :
 	exit()
 else:
 	find_single_variable(file_data,args_list,args.file)
-<<<<<<< HEAD
-=======
 
 # To do
 # properly write returnvalues function so as for it to search it in range function_declaration to endfunction
 # hooking yelp in scilab-cli
 # parsing 'exec path + something.sci'
->>>>>>> staging
